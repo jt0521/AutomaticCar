@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">盼达订车专用</string>
+    <string name="description">由于每个版本可能会出现不同的id，我们必须更改寻找控件的id实现点击事件</string>
+    <string name="label">盼达订车专用</string>
+</resources>
