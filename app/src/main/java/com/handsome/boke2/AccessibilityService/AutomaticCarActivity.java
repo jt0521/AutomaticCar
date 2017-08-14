@@ -1,16 +1,19 @@
 package com.handsome.boke2.AccessibilityService;
 
+import android.Manifest;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.handsome.boke2.R;
 
@@ -25,11 +28,24 @@ public class AutomaticCarActivity extends AppCompatActivity implements View.OnCl
 
 
     private int SCREEN_OFF_TIMEOUT;
+    private PermissionUtil permissionUtil;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_qhb);
+        permissionUtil = new PermissionUtil(this) {
+            @Override
+            protected void requestPermissionsSuccess() {
+                Toast.makeText(getApplicationContext(),"设置成功",Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            protected void requestPermissionsFail() {
+
+            }
+        };
+        permissionUtil.requestPermissions(1,new String[]{Manifest.permission.WRITE_SETTINGS});
         btnAS = (Button) findViewById(R.id.btnFuZhu);
         btnAS.setOnClickListener(this);
 
@@ -79,5 +95,10 @@ public class AutomaticCarActivity extends AppCompatActivity implements View.OnCl
         stopService(new Intent(this,AutomaticCarAccessibilityService.class));
         setScreenOffTime(SCREEN_OFF_TIMEOUT);
         super.onDestroy();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        permissionUtil.requestResponse(requestCode,permissions,grantResults);
     }
 }
