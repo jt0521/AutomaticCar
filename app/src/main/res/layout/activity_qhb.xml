@@ -5,20 +5,6 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <Button
-        android:id="@+id/btnFuZhu"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="12dp"
-        android:text="辅助功能" />
-
-    <Button
-        android:id="@+id/btnStartAutoCare"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:padding="12dp"
-        android:text="启动盼达" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -31,12 +17,12 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="取车站点"
+            android:text="可用里程："
             android:textColor="#000000"
             android:textSize="16sp" />
 
         <android.support.v7.widget.AppCompatEditText
-            android:id="@+id/tv_cargetStation"
+            android:id="@+id/tv_mileage"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
@@ -56,7 +42,34 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="还车站点"
+            android:text="取车站点："
+            android:textColor="#000000"
+            android:textSize="16sp" />
+
+        <android.support.v7.widget.AppCompatEditText
+            android:id="@+id/tv_cargetStation"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:hint="请填写区县+站点名称"
+            android:textColorHighlight="@color/colorAccent"
+            android:layout_weight="1"
+            android:gravity="center_vertical" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="8dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="还车站点："
             android:textColor="#000000"
             android:textSize="16sp" />
 
@@ -69,4 +82,37 @@
             android:gravity="center_vertical" />
 
     </LinearLayout>
+
+    <Button
+        android:id="@+id/btnSaveMsg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:padding="12dp"
+        android:text="保存数据" />
+
+    <Button
+        android:id="@+id/btnFuZhu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="12dp"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:text="打开辅助功能" />
+
+    <Button
+        android:id="@+id/btnStartAutoCare"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:padding="12dp"
+        android:text="启动盼达" />
+
+    <Button
+        android:id="@+id/btnFinish"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:padding="12dp"
+        android:text="关闭" />
+
 </LinearLayout>
