@@ -29,10 +29,13 @@ public class AutomaticCarAccessibilityService extends AccessibilityService {
     public static String tv_backstation;
 
     //默认里程
-    public static int mileage = 50;
+    public static int mileage = 45;
 
     //已经更换车辆
     private boolean choosed = false;
+
+    //是否指定了取车地点
+    private boolean hasSpecify = false;
 
     /**
      * 当启动服务的时候就会被调用
@@ -86,8 +89,8 @@ public class AutomaticCarAccessibilityService extends AccessibilityService {
                     //订单页面
                     AccessibilityNodeInfo rootNode = getRootInActiveWindow();
 
-                    if (!TextUtils.isEmpty(tv_cargetOregion)&&
-                            !TextUtils.isEmpty(tv_cargetStation)){
+                    if (!hasSpecify && !TextUtils.isEmpty(tv_cargetOregion) &&
+                            !TextUtils.isEmpty(tv_cargetStation)) {
                         inputClickForId("com.woasis.smp:id/tv_cargetStation");
                         return;
                     }
@@ -107,8 +110,15 @@ public class AutomaticCarAccessibilityService extends AccessibilityService {
                             i = 10;
                         }
                     }
-                    //点击取车站点
-//                    inputClick("com.woasis.smp:id/tv_cargetStation");
+
+                    if (!oderBuy) {
+                        if (!TextUtils.isEmpty(tv_cargetOregion) &&
+                                !TextUtils.isEmpty(tv_cargetStation)) {
+                            inputClickForId("com.woasis.smp:id/tv_cargetStation");
+                            return;
+                        }
+                    }
+
                     if (!choosed && replace) {
                         List<AccessibilityNodeInfo> lists = rootNode.findAccessibilityNodeInfosByViewId("com.woasis.smp:id/btn_change");
                         if (lists != null && lists.size() != 0) {
@@ -120,9 +130,9 @@ public class AutomaticCarAccessibilityService extends AccessibilityService {
                         }
                     }
                     if (oderBuy) {//订车
-                        Log.e("tgl===","订车");
-//                        inputClick("com.woasis.smp:id/postorder");
-//                        startAlarm();
+//                        Log.e("tgl===", "订车");
+                        inputClickForId("com.woasis.smp:id/postorder");
+                        startAlarm();
                     } else {//返回继续监控
 //                        inputClick("com.woasis.smp:id/im_back");
                         performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK);
@@ -140,18 +150,52 @@ public class AutomaticCarAccessibilityService extends AccessibilityService {
                     }
                 } else if (className.equals("com.woasis.smp.activity.ChoiseStationActivity")) {
                     //选择网点
-                    SystemClock.sleep(500);
-//                    AccessibilityNodeInfo rootNode = getRootInActiveWindow();
-//                    List<AccessibilityNodeInfo> cityList = rootNode.findAccessibilityNodeInfosByViewId("com.woasis.smp:id/listcity");
-//                    if (cityList != null && cityList.size() != 0) {
-//                        AccessibilityNodeInfo cityNode = cityList.get(0);
-//                        for (int i = 0; i < cityNode.getChildCount(); i++) {
-//                            textClick(cityNode.getChild(i), "沙坪坝区");
-//                        }
-//                    }
-                    inputClickForText(true,tv_cargetOregion);
                     SystemClock.sleep(200);
-                    inputClickForText(true,tv_cargetStation);
+                    AccessibilityNodeInfo rootNode = getRootInActiveWindow();
+                    boolean hasCity = false;
+                    for (int i = 0; i < 7; i++) {//查看区域
+                        List<AccessibilityNodeInfo> cityList = rootNode.findAccessibilityNodeInfosByViewId("com.woasis.smp:id/listcity");
+                        if (cityList != null && cityList.size() != 0) {
+                            AccessibilityNodeInfo cityNode = cityList.get(0);
+                            if (cityNode.getChildCount() > 0) {
+                                i = 10;
+                                hasCity = true;
+                            } else {
+                                SystemClock.sleep(200);
+                            }
+                        } else {
+                            SystemClock.sleep(200);
+                        }
+                    }
+                    if (hasCity) {
+                        inputClickForText(true, tv_cargetOregion);
+                    } else {//返回
+                        performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK);
+                        return;
+                    }
+                    SystemClock.sleep(200);
+                    boolean hasTown = false;//乡镇
+                    List<AccessibilityNodeInfo> townList = rootNode.findAccessibilityNodeInfosByViewId("com.woasis.smp:id/liststaticion");
+                    AccessibilityNodeInfo townNode = townList.get(0);
+                    for (int i = 0; i < 7; i++) {//查看乡镇
+                        if (townList != null && townList.size() != 0) {
+                            if (townNode.getChildCount() > 0) {
+                                i = 10;
+                                hasTown = true;
+                            } else {
+                                SystemClock.sleep(200);
+                            }
+                        } else {
+                            SystemClock.sleep(200);
+                        }
+                    }
+                    if (hasTown) {
+                        inputClickTownView(townNode,tv_cargetStation);
+                        hasSpecify = true;
+                    } else {
+                        performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK);
+                        return;
+                    }
                 }
                 break;
         }
@@ -173,55 +217,56 @@ public class AutomaticCarAccessibilityService extends AccessibilityService {
         }
     }
 
-    private void inputClickForText(String chickText){
-        inputClickForText(false,chickText);
+    private void inputClickForText(String chickText) {
+        inputClickForText(false, chickText);
     }
+
     /**
      * 按文字查找按钮并点击
+     *
      * @param clickParent 是否点击文字按钮父view
      * @param clickText
      */
-    private void inputClickForText(boolean clickParent,String clickText) {
+    private void inputClickForText(boolean clickParent, String clickText) {
         AccessibilityNodeInfo nodeInfo = getRootInActiveWindow();
         if (nodeInfo != null) {
             List<AccessibilityNodeInfo> list = nodeInfo.findAccessibilityNodeInfosByText(clickText);
             for (AccessibilityNodeInfo item : list) {
-                if (clickParent){
+                if (clickParent) {
                     item.getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK);
-                }else {
+                } else {
                     item.performAction(AccessibilityNodeInfo.ACTION_CLICK);
                 }
             }
         }
     }
 
-//    /**
-//     * 点击指定文字按钮
-//     *
-//     * @param info
-//     */
-//    private void textClick(AccessibilityNodeInfo info, String clickMsg) {
-//        if (info == null) {
-//            return;
-//        }
-//        if (info.getChildCount() == 0) {
-//            if (info.getText() != null) {
-//                if (clickMsg.equals(info.getText().toString())) {
-//                    if (info.isClickable()) {
-//                        info.performAction(AccessibilityNodeInfo.ACTION_CLICK);
-//                    } else {
-//                    }
-//                    return;
-//                }
-//            }
-//        } else {
-//            for (int i = 0; i < info.getChildCount(); i++) {
-//                if (info.getChild(i) != null) {
-//                    textClick(info.getChild(i), clickMsg);
-//                }
-//            }
-//        }
-//    }
+    /**
+     * 按文字查找 取车点并点击
+     *
+     * @param clickText
+     */
+    private void inputClickTownView(AccessibilityNodeInfo nodeInfo, String clickText) {
+        for (int i = 0; i < 5; i++) {
+            List<AccessibilityNodeInfo> list = nodeInfo.findAccessibilityNodeInfosByText(clickText);
+            if (list==null||list.size()==0){
+                nodeInfo.performAction(AccessibilityNodeInfo.ACTION_SCROLL_FORWARD);
+            }else {
+                for (AccessibilityNodeInfo item : list) {//按道理只有唯一一个view
+                    if (item.getParent().isClickable()) {
+                        item.getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                        return;
+                    } else {
+
+                        //滑动listView
+                        nodeInfo.performAction(AccessibilityNodeInfo.ACTION_SCROLL_FORWARD);
+                    }
+                }
+            }
+            SystemClock.sleep(80);
+        }
+        performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK);
+    }
 
     /**
      * 获取按键进行点击
@@ -336,6 +381,12 @@ public class AutomaticCarAccessibilityService extends AccessibilityService {
         return null;
     }
 
+    /**
+     * 选择车辆
+     *
+     * @param rootNode
+     * @param scoureId
+     */
     private void clickListView(AccessibilityNodeInfo rootNode, String scoureId) {
         int maxIndex = 0;
         int last_mileage = 0;
@@ -358,6 +409,44 @@ public class AutomaticCarAccessibilityService extends AccessibilityService {
             }
             info.getChild(maxIndex).performAction(AccessibilityNodeInfo.ACTION_CLICK);
         }
+    }
+
+    /**
+     * 选择区域，因为listView子View不可见时不能点击
+     *
+     * @param rootNode
+     */
+    private void clickListTownView(AccessibilityNodeInfo rootNode, String townText) {
+        int target = 0;
+        for (int i = 0; i < rootNode.getChildCount(); i++) {
+            AccessibilityNodeInfo nodeInfo = rootNode.getChild(i);
+            List<AccessibilityNodeInfo> townInfo = nodeInfo.findAccessibilityNodeInfosByText(townText);
+            if (townInfo == null || townInfo.size() == 0) {
+                rootNode.performAction(AccessibilityNodeInfo.ACTION_SCROLL_FORWARD);
+            } else {
+                target = i;
+                i = Integer.MAX_VALUE;
+            }
+        }
+//            AccessibilityNodeInfo info = lists.get(0);
+//            rootNode.
+//            info.getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK);
+//            for (int i = 0; i < info.getChildCount(); i++) {
+//                AccessibilityNodeInfo child = info.getChild(i);
+//                if (child != null) {
+//                    List<AccessibilityNodeInfo> mChilds = child.findAccessibilityNodeInfosByViewId("com.woasis.smp:id/tv_item_mileage");
+//                    if (mChilds != null && mChilds.size() > 0) {
+//                        String item_mileage = mChilds.get(0).getText().toString();
+//                        int curr_mileage = Integer.parseInt(getNumber(item_mileage));
+//                        if (curr_mileage > last_mileage) {
+//                            maxIndex = i;
+//                            last_mileage = curr_mileage;
+//                        }
+//                    }
+//                }
+//            }
+//            info.getChild(maxIndex).performAction(AccessibilityNodeInfo.ACTION_CLICK);
+//        }
     }
 
     public String getNumber(String msg) {

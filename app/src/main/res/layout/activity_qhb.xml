@@ -26,6 +26,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
+            android:hint="请填写整数 默认45公里"
             android:layout_weight="1"
             android:gravity="center_vertical" />
 

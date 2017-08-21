@@ -62,7 +62,7 @@ public class AutomaticCarActivity extends AppCompatActivity implements View.OnCl
         permissionUtil.requestPermissions(1,
                 new String[]{
                         Manifest.permission.WRITE_SETTINGS,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+//                        Manifest.permission.WRITE_EXTERNAL_STORAGE
                 });
         btnAS = (Button) findViewById(R.id.btnFuZhu);
         btnAS.setOnClickListener(this);
