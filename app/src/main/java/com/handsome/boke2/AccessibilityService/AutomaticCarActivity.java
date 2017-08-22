@@ -141,49 +141,4 @@ public class AutomaticCarActivity extends AppCompatActivity implements View.OnCl
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         permissionUtil.requestResponse(requestCode, permissions, grantResults);
     }
-
-//
-//    /**
-//     * 根据资源id获得图片并压缩，返回bitmap用于显示
-//     */
-//    final public Bitmap getSmallBmpFromResource(Context context, int id, int targetW, int targetH) {
-//        if (context == null || context.getResources() == null) {
-//            return null;
-//        }
-//        InputStream inputStream = context.getResources().openRawResource(id);
-//        final BitmapFactory.Options options = new BitmapFactory.Options();
-//        options.inJustDecodeBounds = true;
-//        options.inPurgeable = true;
-//        options.inInputShareable = true;
-//        options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-////		BitmapFactory.decodeResource(context.getResources(), id, options);
-//        BitmapFactory.decodeStream(inputStream, null, options);
-//        // Calculate inSampleSize
-//
-//        options.inSampleSize = calculateInSampleSize(options, targetW, targetH);
-//        // Decode bitmap with inSampleSize set
-//        options.inJustDecodeBounds = false;
-//        Bitmap bitmap = BitmapFactory.decodeStream(inputStream, null, options);
-//        try {
-//            inputStream.close();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        return bitmap;
-//    }
-//
-//    /** 计算图片的缩放值 */
-//    final public int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight)
-//    {
-//        final int height = options.outHeight;
-//        final int width = options.outWidth;
-//        int inSampleSize = 1;
-//        if(height > reqHeight || width > reqWidth)
-//        {
-//            final int heightRatio = Math.round((float) height / (float) reqHeight);
-//            final int widthRatio = Math.round((float) width / (float) reqWidth);
-//            inSampleSize = heightRatio < widthRatio ? heightRatio : widthRatio;
-//        }
-//        return inSampleSize;
-//    }
 }
