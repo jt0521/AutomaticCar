@@ -106,6 +106,11 @@ public class AutomaticCarAccessibilityService extends AccessibilityService {
                             if (tv_number < mileage) {//小于目标里程，设置换车
                                 replace = true;
                             }
+                            String carNum = getNoteInfoText(rootNode,"com.woasis.smp:id/tv_license");
+                            if (carNum.contains("测试")){
+                                performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK);
+                                return;
+                            }
                             oderBuy = true;
                             i = 10;
                         }
