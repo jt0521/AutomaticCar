@@ -1,0 +1,30 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  
+  <title>share content</title>
+
+</head>
+<body>
+
+<a  href="javascript:;" onclick="js_method()">  click  </a>
+
+    <button onclick="myFunction();">点我</button>
+    <div id="demo">I'm Chenqing</div>
+    <script>
+        function myFunction() {
+            var file = document.getElementById('demo').innerHTML;
+            var text = file.replace(/qing/i,'Qing');
+            document.getElementById('demo').innerHTML = text;
+			var param = " 测试代码 test test";
+			window.hbk.openShare();
+        }
+    </script>
+
+</body>
+
+</html>
